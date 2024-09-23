@@ -1,5 +1,8 @@
 pipeline {
     agent { label 'Jenkins-Agent' }
+    tools {
+        node 'node19'
+    }
     environment {
         APP_NAME = "react-app"
         RELEASE = "1.0.0"
