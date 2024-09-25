@@ -27,6 +27,7 @@ pipeline {
         stage("Install Dependencies") {
             steps {
                 script {
+                    sh 'npm cahce --clean force'
                     sh 'npm install'
                 }
             }
@@ -35,7 +36,7 @@ pipeline {
         stage("Build Application") {
             steps {
                 script {
-                    sh 'CI=false npm run build'
+                    sh 'CI=false npm run build --verbose'
                 }
             }
         }
