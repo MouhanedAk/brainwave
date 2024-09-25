@@ -24,6 +24,7 @@ pipeline {
         stage("Install Dependencies") {
             steps {
                 script {
+                    sh 'npm run clean --force'
                     sh 'npm install'
                 }
             }
@@ -32,7 +33,7 @@ pipeline {
         stage("Build Application") {
             steps {
                 script {
-                    sh 'npm run build'
+                    sh 'CI=false npm run build --verbose'
                 }
             }
         }
@@ -43,6 +44,25 @@ pipeline {
                     sh 'npm test'
                 }
             }
+        }
+
+        stage("SonarQube Analysis"){
+           steps {
+	           script {
+		        withSonarQubeEnv(credentialsId: 'jenkins-sonarqube-token') { 
+                        sh "npx sonar-scanner"
+		        }
+	           }	
+           }
+       }
+
+       stage("Quality Gate"){
+           steps {
+               script {
+                    waitForQualityGate abortPipeline: false, credentialsId: 'jenkins-sonarqube-token'
+                }	
+            }
+
         }
 
         stage("Build & Push Docker Image") {
