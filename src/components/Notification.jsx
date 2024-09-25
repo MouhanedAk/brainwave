@@ -16,7 +16,7 @@ const Notification = ({className, title}) => {
             ))}
           </ul>
           <div className="body-2 text-n-13">
-            3m ago
+            10m ago
           </div>
         </div>
       </div>

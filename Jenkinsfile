@@ -1,5 +1,8 @@
 pipeline {
     agent { label 'Jenkins-Agent' }
+    tools {
+        nodejs 'node19'
+    }
     environment {
         APP_NAME = "react-app"
         RELEASE = "1.0.0"
@@ -24,7 +27,7 @@ pipeline {
         stage("Install Dependencies") {
             steps {
                 script {
-                    sh 'npm run clean --force'
+                    sh 'npm cache clean --force'
                     sh 'npm install'
                 }
             }
@@ -45,6 +48,25 @@ pipeline {
                 }
             }
         }
+        stage("SonarQube Analysis"){
+           steps {
+	           script {
+		        withSonarQubeEnv(credentialsId: 'jenkins-sonarqube-token') { 
+                        sh "npx sonar-scanner"
+		        }
+	           }	
+           }
+       }
+
+       stage("Quality Gate"){
+           steps {
+               script {
+                    waitForQualityGate abortPipeline: false, credentialsId: 'jenkins-sonarqube-token'
+                }	
+            }
+
+        }
+        
 
         stage("SonarQube Analysis"){
            steps {
