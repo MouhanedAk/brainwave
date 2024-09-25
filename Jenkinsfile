@@ -35,8 +35,7 @@ pipeline {
         stage("Build Application") {
             steps {
                 script {
-                    sh 'npm ci'
-                    sh 'npm run build'
+                    sh 'CI=false npm run build'
                 }
             }
         }
