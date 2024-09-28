@@ -18,3 +18,4 @@ EXPOSE 3000
 
 # Command to run the app in development mode
 CMD ["npm", "run", "dev"]
+CMD ["vite", "--host"]
